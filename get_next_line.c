@@ -2,7 +2,7 @@
 
 int get_next_line(int fd, char **line)
 {
-	static container_t 	*container;
+	static t_list 		**list;
 	char				*buff;
 	int 				reader;
 	char				**text_adress;
@@ -13,7 +13,7 @@ int get_next_line(int fd, char **line)
 	if (!buff)
 		return (-1);
 	reader = 1;
-	text_adress = get_text(container, fd);
+	text_adress = get_text(list, fd);
 	reader = gnl_reader(text_adress, fd, buff, BUFFER_SIZE);
 	free(buff);
 	if (reader == -1)

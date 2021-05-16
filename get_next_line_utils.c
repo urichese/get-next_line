@@ -6,7 +6,7 @@ int gnl_reader(char **text_adress, int fd, char *buff, int buff_size)
 
 	while (!has_line(text_adress))
 	{
-		reader = gnl_reader(text_adress, fd, buff, BUFFER_SIZE);
+		reader = gnl_reader(text_adress, fd, buff, buff_size);
 		if (reader == -1)
 		{
 			free(buff);
@@ -59,7 +59,7 @@ void 	ft_strjoin(char **s1_address, char const *s2)
 	char	*rtn;
 	char 	*s1;
 
-	if (!s1_address && !s2 ||!(*s1_address))
+	if ((!s1_address && !s2) ||!(*s1_address))
 		return ;
 	s1 = *s1_address;
 	s1_len = ft_strlen((char *)s1);
@@ -91,4 +91,64 @@ int			has_line(char **str_address)
 		i++;
 	}
 	return (0);
+}
+
+char 		**get_text(t_list **list, int fd)
+{
+	int 	flag;
+	char	**address;
+	t_list	*lis;
+	container_t	*container;
+
+
+	flag = 0;
+	if (list == NULL)
+	{
+		list = (t_list **) malloc(sizeof (t_list *));
+	}
+	lis = *list;
+	while (lis)
+	{
+		if (lis->content->fd == fd)
+		{
+			flag = 1;
+			address = lis->content->text;
+		}
+	}
+	if (flag == 0)
+	{
+		container = (container_t *) malloc(sizeof (container_t));
+		container->text = NULL;
+		address = lis->content->text;
+
+		ft_lstadd_back(list, ft_lstnew(container));
+	}
+	return (address);
+}
+
+t_list	*ft_lstnew(container_t *content)
+{
+	t_list	*lst;
+
+	lst = (t_list *) malloc(sizeof (t_list));
+	if (!lst)
+		return (NULL);
+	lst->content = content;
+	lst->next = NULL;
+	return (lst);
+}
+
+void	ft_lstadd_back(t_list **lst, t_list *new)
+{
+	t_list	*buf;
+
+	buf = *lst;
+	if (buf)
+	{
+		while (buf->next)
+			buf = buf->next;
+		buf->next = new;
+	}
+	else
+		*lst = new;
 }
